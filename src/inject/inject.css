@@ -1,0 +1,13 @@
+img[src*=gif] {
+  visibility: hidden;
+}
+
+img[src*=gif].loaded {
+  visibility: visible;
+}
+
+.gif-loading {
+  position: absolute;
+  top:0;
+  left:0;
+}
