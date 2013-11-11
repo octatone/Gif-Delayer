@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "manifest_version": 2,
   "description": "Delays showing/playing gifs until they are fully downloaded.",
-  "homepage_url": "http://github.com",
+  "homepage_url": "https://github.com/octatone/Gif-Delayer",
   "icons": {
     "48": "icons/icon48.png",
     "128": "icons/icon128.png"
