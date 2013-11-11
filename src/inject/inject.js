@@ -4,7 +4,8 @@
 function getGifs (context) {
 
   var gifs = [];
-  var images = $('img', context).not('loaded');
+  var images = $('img', context).not('.loaded').add($(context).filter('img').not('.loaded'));
+
   var image;
   for (var i=0, len=images.length; i < len; i++) {
     image = images[i];
@@ -46,10 +47,10 @@ function loadGif (gif) {
   }
 }
 
-function loadGifs () {
+function loadGifs (context) {
 
-  var gifs = getGifs();
-  console.log('loadGifs', gifs.length);
+  var gifs = getGifs(context);
+  gifs.length && console.log('loadGifs', gifs.length);
   for (var i=0, len=gifs.length; i<len; i++) {
     loadGif(gifs[i]);
   }
@@ -63,12 +64,17 @@ function observe () {
   // create an observer instance
   var observer = new MutationObserver(function (mutations) {
 
-    if (mutations.addedNodes) {
-      mutations.addedNodes.forEach(function (node) {
+    var node;
 
-        loadGifs(node);
-      });
-    }
+    mutations.forEach(function (mutation) {
+    
+      if (mutation.addedNodes) {
+        for (var i=0, len=mutation.addedNodes.length; i<len; i++) {
+          node = mutation.addedNodes[i];
+          loadGifs(node);
+        }
+      }
+    });
   });
    
   // configuration of the observer:
