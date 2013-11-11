@@ -62,9 +62,13 @@ function observe () {
    
   // create an observer instance
   var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-      console.log(mutation.type);
-    });
+
+    if (mutations.addedNodes) {
+      mutations.addedNodes.forEach(function (node) {
+
+        loadGifs(node);
+      });
+    }
   });
    
   // configuration of the observer:
