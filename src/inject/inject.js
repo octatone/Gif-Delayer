@@ -1,10 +1,10 @@
 /* global $ */
 'use strict';
 
-function getGifs () {
+function getGifs (context) {
 
   var gifs = [];
-  var images = document.getElementsByTagName('img');
+  var images = $('img', context).not('loaded');
   var image;
   for (var i=0, len=images.length; i < len; i++) {
     image = images[i];
@@ -18,12 +18,14 @@ function getGifs () {
 
 function loadGif (gif) {
 
+  console.log('loadGif');
+
   var isLoaded = false;
   var url = gif.src;
   var image = new Image();
   var $loading = $('<div class="gif-loading">Loading yer gif ...</div>');
 
-  var $gif = $(gif);
+  var $gif = $(gif).addClass('gif-delayer');
 
   function loaded () {
 
@@ -53,4 +55,34 @@ function loadGifs () {
   }
 }
 
-loadGifs();
+function observe () {
+
+  // select the target node
+  var target = document.body;
+   
+  // create an observer instance
+  var observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+      console.log(mutation.type);
+    });
+  });
+   
+  // configuration of the observer:
+  var config = {
+
+    'childList': true, //Set to true if mutations to target's children are to be observed.
+    // attributes  Set to true if mutations to target's attributes are to be observed.
+    // characterData Set to true if mutations to target's data are to be observed.
+    'subtree': true, // Set to true if mutations to not just target, but also target's descendants are to be observed.
+    // attributeOldValue Set to true if attributes is set to true and target's attribute value before the mutation needs to be recorded.
+    // characterDataOldValue Set to true if characterData is set to true and target's data before the mutation needs to be recorded.
+    // attributeFilter
+  };
+   
+  // pass in the target node, as well as the observer options
+  observer.observe(target, config);
+}
+
+loadGifs(document.body);
+
+$(observe);
