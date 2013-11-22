@@ -125,7 +125,7 @@ function observe () {
           loadGifs(node);
         }
       }
-      else if (mutation.attributeName === 'class'){
+      else if (mutation.attributeName === 'class' || mutation.attributeName === 'src'){
 
         if (!$(mutation.target).hasClass('gif-delayer')) {
           loadGifs(mutation.target);
