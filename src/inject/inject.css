@@ -2,12 +2,13 @@ img[src*=gif] {
   visibility: hidden;
 }
 
-img[src*=gif].loaded {
+img[src*=gif].gif-delayer-loaded {
   visibility: visible;
 }
 
-.gif-loading {
+.gif-delayer-loading {
   position: absolute;
   top:0;
   left:0;
+  margin: 10px;
 }

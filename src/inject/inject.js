@@ -3,11 +3,27 @@
 
 var _loadedURLS = {};
 var _loadingURLS = {};
+var _logPrefix = '[GIF DELAYER] - ';
+
+function log (string, e) {
+  e = e || '';
+  console.log(_logPrefix + string, e);
+}
+
+function warn (string, e) {
+  e = e || '';
+  console.warn(_logPrefix + string, e);
+}
+
+function isResolved (deferred) {
+
+  return deferred.state() === 'resolved';
+}
 
 function getGifs (context) {
 
   var gifs = [];
-  var images = $('img', context).not('.loaded').add($(context).filter('img').not('.loaded'));
+  var images = $('img', context).not('.gif-delayer-loaded').add($(context).filter('img').not('.gif-delayer-loaded'));
 
   var image;
   for (var i=0, len=images.length; i < len; i++) {
@@ -22,40 +38,64 @@ function getGifs (context) {
 
 function loadGif (gif) {
 
-  var isLoaded = false;
   var url = gif.src;
-  var $loading = $('<div class="gif-loading">Loading yer gif ...</div>');
+  var $loading = $('<div class="gif-delayer-loading">Loading yer gif ...</div>');
   var $gif = $(gif).addClass('gif-delayer');
 
   function loaded () {
-
-    if (!isLoaded) {
-      isLoaded = true;
-      $loading.remove();
-      $gif.addClass('loaded');
-      _loadedURLS[url] = true;
-      _loadingURLS[url].resolve();
-    }
+    $loading.remove();
+    $gif.addClass('gif-delayer-loaded');
   }
 
   if (!_loadedURLS[url] && !_loadingURLS[url]) {
 
-    _loadingURLS[url] = new $.Deferred();
+    log('load starting for ' + url);
 
-    $gif.after($loading);
+    var deferred = _loadingURLS[url] = new $.Deferred();
+
+    $gif.before($loading);
     var image = new Image();
-    image.addEventListener('load', loaded);
+
+    image.addEventListener('load', function () {
+
+      if (!isResolved(deferred)) {
+        log('load completed, resolving ' + url);
+        deferred.resolve();
+      }
+    });
+    
+    image.addEventListener('abort', function (e) {
+
+      if (!isResolved(deferred)) {
+        warn('load aborted, resolving ' + url, e);
+        deferred.resolve();
+      }
+    });
+    
+    image.addEventListener('error', function (e) {
+      
+      if (!isResolved(deferred)) {
+        warn('load errored, resolving ' + url, e);
+        deferred.resolve();
+      }
+    });
+    
     image.src = url;
+    
     if (image.complete) {
-      loaded();
+      if (!isResolved(deferred)) {
+        log('already cached, resolving ' + url);
+        deferred.resolve();
+      }
     }
   }
-  else {
-    $.when(_loadingURLS[url]).then(function () {
 
-      loaded();
-    });
-  }
+  $.when(_loadingURLS[url]).then(function () {
+    
+    log('deferred resolved, reveailing gif(s) ' + url);
+    _loadedURLS[url] = true;
+    loaded();
+  });
 }
 
 function loadGifs (context) {
