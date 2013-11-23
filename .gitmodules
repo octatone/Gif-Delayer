@@ -1,0 +1,3 @@
+[submodule "src"]
+	path = src
+	url = git@github.com:octatone/gif-delayer-common.git
