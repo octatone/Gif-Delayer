@@ -39,7 +39,7 @@ function getGifs (context) {
 function loadGif (gif) {
 
   var url = gif.src;
-  var $loading = $('<div class="gif-delayer-loading">Loading yer gif ...</div>');
+  var $loading = $('<div class="gif-delayer-loading">Loading yer gif </div>');
   var $gif = $(gif).addClass('gif-delayer');
 
   function loaded () {
