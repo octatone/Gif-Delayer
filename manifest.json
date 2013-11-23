@@ -1,6 +1,6 @@
 {
   "name": "Gif Delayer",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "manifest_version": 2,
   "description": "Delays showing/playing gifs until they are fully downloaded.",
   "homepage_url": "https://github.com/octatone/Gif-Delayer",
