@@ -24,7 +24,7 @@
         "<all_urls>"
       ],
       "js": [
-        "js/jquery/jquery.js",
+        "src/inject/vendor/jquery.min.js",
         "src/inject/inject.js"
       ],
       "run_at": "document_end"
