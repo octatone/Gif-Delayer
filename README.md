@@ -8,6 +8,9 @@ https://chrome.google.com/webstore/detail/gif-delayer/cmfcdkambpljcndgdmaccaagla
 Change Log
 ==========
 
+0.0.8
+- fix bug overriding default gif styling on certain websites (thanks to [Marc Cornellà](https://github.com/mcornella))
+
 0.0.7
 - fix bug preventing gifs from loading on Wolfram Alpha
 

@@ -1,6 +1,6 @@
 {
   "name": "Gif Delayer",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "manifest_version": 2,
   "description": "Gif Delayer delays playing gifs until they are fully downloaded.",
   "homepage_url": "https://github.com/octatone/Gif-Delayer",
@@ -24,7 +24,7 @@
         "<all_urls>"
       ],
       "js": [
-        "src/inject/vendor/jquery.min.js",
+        "src/inject/vendor/jquery-2.0.3.js",
         "src/inject/inject.js"
       ],
       "run_at": "document_end"
