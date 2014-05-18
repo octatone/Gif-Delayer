@@ -25,6 +25,8 @@ chrome.webRequest.onHeadersReceived.addListener(function (details) {
     }
   });
 
+  console.debug('Content-Length', contentLength);
+
   if (contentLength !== undefined) {
     contentLength = getReadableFileSizeString(contentLength);
     fileSizes[details.url] = contentLength;
@@ -33,33 +35,50 @@ chrome.webRequest.onHeadersReceived.addListener(function (details) {
   console.log('onHeadersReceived', details.url, fileSizes[details.url]);
 
   var sendResponse = sizeRequests[details.url];
-  console.log(sendResponse);
   if (sendResponse) {
+    console.debug('send response callback', fileSizes[details.url]);
     sendResponse(fileSizes[details.url]);
   }
 },
 {
-  'urls': ['*://*/*gif']
+  'urls': ['*://*/*gif'],
+  'types': ['image']
 },
 ['responseHeaders']
 );
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+function handleSizePorts (port) {
 
-  var fileSize;
-  if (request.url) {
-    fileSize = fileSizes[request.url];
-  }
+  port.onMessage.addListener(function (msg) {
 
-  console.log('onMessage', request.url, fileSizes[request.url]);
+    var fileSize;
+    if (msg.url) {
+      fileSize = fileSizes[msg.url];
+    }
 
-  if (!fileSize) {
-    sizeRequests[request.url] = function (size) {
+    console.log('onMessage background', msg.url, fileSizes[msg.url]);
 
-      sendResponse({'size': size});
-    };
-  }
-  else {
-    sendResponse({'size': fileSize});
+    if (!fileSize) {
+      sizeRequests[msg.url] = function (size) {
+
+        port.postMessage({
+          'url': msg.url,
+          'size': size
+        });
+      };
+    }
+    else {
+      port.postMessage({
+        'url': msg.url,
+        'size': fileSize
+      });
+    }
+  });
+}
+
+chrome.runtime.onConnect.addListener(function (port) {
+
+  if (port.name === 'size') {
+    handleSizePorts(port);
   }
 });
