@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>My Test Extension Options</title>
+  <style>
+    body: { padding: 10px; }
+		#whitelist-holder { width: 100px; }
+		#whitelist { width: 365px; }
+  </style>
+</head>
+
+<body>
+	<div id="whitelist-holder">
+		Whitelisted Sites:<br>
+		<textarea name="whitelist" spellcheck="false" id="whitelist" autofocus rows="27" placeholder="Enter one domain per line, extension will format properly. Ex: mail.google.com and https://www.google.com will be handled as separate entires, both formats correct."></textarea>
+	</div>
+
+  <div id="status"></div>
+  <button id="save">Save</button>
+
+  <script src="options.js"></script>
+</body>
+</html>
