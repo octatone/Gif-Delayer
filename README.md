@@ -8,6 +8,9 @@ https://chrome.google.com/webstore/detail/gif-delayer/cmfcdkambpljcndgdmaccaagla
 Change Log
 ==========
 
+0.1.2
+- add whitelist of sites to disable this extension on certain sites using chrome options V2
+
 0.0.8
 - fix bug overriding default gif styling on certain websites (thanks to [Marc Cornellà](https://github.com/mcornella))
 

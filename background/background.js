@@ -77,8 +77,36 @@ function handleSizePorts (port) {
 }
 
 chrome.runtime.onConnect.addListener(function (port) {
-
   if (port.name === 'size') {
     handleSizePorts(port);
+  }
+});
+
+//ZH Addition to check whitelist before loading any gifs
+function extractDomain(url) {
+    var domain;
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    } else {
+        domain = url.split('/')[0];
+    }
+    //find & remove port number & remove 'www.'
+    domain = domain.split(':')[0].replace('www.','');
+    return domain;
+}
+
+// listener, updates url on change
+chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
+  if (changeInfo.url != undefined) {
+    chrome.storage.sync.get("whitelist", function(items) {
+      // whitelist > array, return whether current domain matches whitelist
+      var inWhitelist = items.whitelist.split('\n').some(
+        site => extractDomain(site) === extractDomain(changeInfo.url));
+      if(!inWhitelist) {
+        chrome.tabs.executeScript(null, {file: "src/inject/inject.js"});
+        chrome.tabs.insertCSS(null, {file: "src/inject/inject.css"});
+      }
+    });
   }
 });
